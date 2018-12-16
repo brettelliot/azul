@@ -12,9 +12,9 @@ Azul will be successful when a quant can run a zipline backtest using a bundle b
 
 Use Cases and Prototypes
 ------------------------
-Get the current list of symbols in the S&P500 and save them in a file called s&p500.txt::
+Get the current list of symbols in the S&P500 and save them in a file called sp500.txt::
 
-    $ azul symbols --sp500 sp500.txt
+    $ azul get_symbols --source sp500
 
 Get minute and daily data for the S&P500 for the last 30 days from IEX::
 
