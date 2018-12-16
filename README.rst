@@ -1,7 +1,7 @@
 ====
 Azul
 ====
-``azul`` is a python package for downloading historical price data as CSV's ready for use in a zipline bundle.
+``azul`` is a command line tool and python package for downloading historical price data as CSV's ready for use in a zipline bundle.
 
 For more documentation, please see http://azul.readthedocs.io.
 
@@ -11,9 +11,9 @@ Installation
 
     $ pip install azul
 
-Usage
------
-``azul`` is really simple to use. Below you'll find the basics.
+Package Usage
+-------------
+``azul`` can be used as a
 
 Download historical minute and daily bars
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
