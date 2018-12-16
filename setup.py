@@ -18,7 +18,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     install_requires=[
-        'Click',
+        'Click==7.0',
+        'Logbook>=1.4.1'
     ],
     entry_points='''
         [console_scripts]

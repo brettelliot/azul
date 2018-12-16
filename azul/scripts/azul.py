@@ -28,7 +28,7 @@ def cli():
 @click.command()
 @click.option(
     '--source',
-    type=click.Choice({'sp500', 'polygon_cs', 'iex'}),
+    type=click.Choice({'sp500', 'polygon_cs', 'iex', 'test'}),
     default='sp500',
     show_default=True,
     help='The list of symbols from a specific source.',
