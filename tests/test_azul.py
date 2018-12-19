@@ -4,6 +4,8 @@ import azul
 import pathlib
 import shutil
 
+FAANG_FETCHER = 'faang'
+
 
 class TestWriteSymbols(unittest.TestCase):
 
@@ -16,8 +18,9 @@ class TestWriteSymbols(unittest.TestCase):
         self.assertFalse(pathlib.Path(self.test_symbols_file_path).exists())
 
     def setUp(self):
-        self.test_symbols_file_path = pathlib.Path.home() / '.azul/symbols/test.txt'
+        self.test_symbols_file_path = pathlib.Path.home() / ('.azul/symbols/' + FAANG_FETCHER + '.txt')
         self.delete_test_symbols()
+        self.source = FAANG_FETCHER
 
     def tearDown(self):
         self.delete_test_symbols()
@@ -30,7 +33,7 @@ class TestWriteSymbols(unittest.TestCase):
         self.delete_test_symbols()
 
         # When write_symbols is called with no output_location specified
-        azul.write_symbols(source='test', output_path=None)
+        azul.write_symbols(source=FAANG_FETCHER, output_path=None)
 
         # Then there will be a test.txt file written to the home directory
         self.assertTrue(pathlib.Path(self.test_symbols_file_path).exists())
@@ -43,11 +46,11 @@ class TestWriteSymbols(unittest.TestCase):
         f = tempfile.NamedTemporaryFile()
 
         # When write_symbols is asked to overwrite it
-        azul.write_symbols(source='test', output_path=f.name)
+        azul.write_symbols(source=FAANG_FETCHER, output_path=f.name)
 
         # Then it does.
         actual = pathlib.Path(f.name).read_text()
-        expected = 'test_symbol'
+        expected = 'GOOG\n'
         self.assertEqual(actual, expected)
         f.close()
 
@@ -59,10 +62,10 @@ class TestWriteSymbols(unittest.TestCase):
         dir_path = tempfile.mkdtemp()
 
         # When write_symbols is called with an existing directory but no filename
-        azul.write_symbols(source='test', output_path=dir_path)
+        azul.write_symbols(source=FAANG_FETCHER, output_path=dir_path)
 
         # Then it creates a default file in the existing directory.
-        expected_path = pathlib.Path(dir_path) / 'test.txt'
+        expected_path = pathlib.Path(dir_path) / (FAANG_FETCHER + '.txt')
         self.assertTrue(pathlib.Path(expected_path).exists())
 
         # cleanup
@@ -82,10 +85,10 @@ class TestWriteSymbols(unittest.TestCase):
         self.assertFalse(pathlib.Path(non_existent_specified_directory).exists())
 
         # When write_symbols is called with a non existent directory and unspecified file
-        azul.write_symbols(source='test', output_path=non_existent_specified_directory)
+        azul.write_symbols(source=FAANG_FETCHER, output_path=non_existent_specified_directory)
 
         # Then it creates a default file in the new directory
-        expected_path = pathlib.Path(non_existent_specified_directory + '/test.txt')
+        expected_path = pathlib.Path(non_existent_specified_directory + FAANG_FETCHER + '.txt')
         self.assertTrue(pathlib.Path(expected_path).exists())
 
         # cleanup
@@ -106,7 +109,7 @@ class TestWriteSymbols(unittest.TestCase):
             pass
 
         # When write_symbols is asked to put symbols in it
-        azul.write_symbols(source='test', output_path=specified_file_path)
+        azul.write_symbols(source=FAANG_FETCHER, output_path=specified_file_path)
 
         # Then it creates a default file in in.
         expected_path = pathlib.Path(specified_file_path)
@@ -129,7 +132,7 @@ class TestWriteSymbols(unittest.TestCase):
             pass
 
         # When write_symbols is asked to put symbols in it
-        azul.write_symbols(source='test', output_path=non_existent_specified_file_path)
+        azul.write_symbols(source=FAANG_FETCHER, output_path=non_existent_specified_file_path)
 
         # Then it creates the specified file in the new directory
         expected_path = pathlib.Path(non_existent_specified_file_path)

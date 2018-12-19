@@ -18,12 +18,6 @@ class SymbolFetcher(object):
         # Define valid sources
         self.valid_sources = ['sp500', 'iex', 'polygon_cs', 'test']
 
-    def is_valid_source(self, source):
-        if source in self.valid_sources:
-            return True
-        else:
-            return False
-
     def get_symbols_file_path(self, output_path=None, default_filename='symbols.txt'):
         """
         Takes an output location (possibly specified on the command line) and turns it into a file path to a real file.
@@ -90,3 +84,26 @@ class SymbolFetcher(object):
 
         ret_path.touch()
         return ret_path
+
+    def symbols(self):
+        """
+        Returns the list of symbols that were fetched.
+
+        Returns:
+            symbols (list): list of symbols that were fetched.
+
+        """
+        raise NotImplementedError
+
+    def write_symbols_to_file(self, symbols, output_path):
+        """
+        Writes symbols to the output_path.
+        Args:
+            symbols (list): A list of symbols.
+            output_path: A valid pathlib file path.
+
+        Returns:
+            None
+        """
+        for item in symbols:
+            output_path.write_text("%s\n" % item)
