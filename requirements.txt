@@ -1,0 +1,2 @@
+Click==7.0
+Logbook==1.4.1
