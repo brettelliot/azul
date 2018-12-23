@@ -48,7 +48,7 @@ class TestAnimalFactory(unittest.TestCase):
         dog = AnimalFactory.create_animal('Dog')('param1')
         actual = dog.speak()
         expected = 'Bark param1'
-        self.assertEqual(actual, expected)
+        self.assertEqual(expected, actual)
 
     def test_create_cat(self):
         AnimalFactory.register('Dog', Dog)
@@ -57,7 +57,7 @@ class TestAnimalFactory(unittest.TestCase):
         cat = AnimalFactory.create_animal('Cat')('param1', 'param2')
         actual = cat.speak()
         expected = 'Meow param1 param2'
-        self.assertEqual(actual, expected)
+        self.assertEqual(expected, actual)
 
     def test_create_unregistered_animal(self):
         AnimalFactory.register('Dog', Dog)

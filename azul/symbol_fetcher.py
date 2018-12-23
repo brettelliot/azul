@@ -48,8 +48,8 @@ class SymbolFetcher(object):
         if output_path is None:
             # Scenario 1: Nothing was specified
             # Create a default symbols file in default symbols path.
-            log.debug('Nothing was specified.')
             ret_path = pathlib.Path(self.symbols_path) / default_filename
+            log.debug('output_path was not specified. Using: %s' % ret_path)
         else:
             # Some output location was specified
             output_path = pathlib.Path(output_path)
@@ -105,5 +105,6 @@ class SymbolFetcher(object):
         Returns:
             None
         """
-        for item in symbols:
-            output_path.write_text("%s\n" % item)
+        # Create a string with each symbol item separated by a newline
+        symbols_with_newlines = '\n'.join(symbols)
+        output_path.write_text(symbols_with_newlines)

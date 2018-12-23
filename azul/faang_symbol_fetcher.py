@@ -1,5 +1,6 @@
 import azul
 
+
 @azul.symbol_fetcher_registry.register('faang')
 class FaangSymbolFetcher(azul.SymbolFetcher):
 

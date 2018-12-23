@@ -50,8 +50,8 @@ class TestWriteSymbols(unittest.TestCase):
 
         # Then it does.
         actual = pathlib.Path(f.name).read_text()
-        expected = 'GOOG\n'
-        self.assertEqual(actual, expected)
+        expected = 'FB\nAMZN\nAAPL\nNFLX\nGOOG'
+        self.assertEqual(expected, actual)
         f.close()
 
     def test_writes_symbols_to_a_default_file_when_existing_directory_specified(self):

@@ -37,13 +37,13 @@ class TestAnimalRegistry(unittest.TestCase):
         dog = animal_registry.get('dog', 'param1')
         actual = dog.speak()
         expected = 'Bark param1'
-        self.assertEqual(actual, expected)
+        self.assertEqual(expected, actual)
 
     def test_create_cat(self):
         cat = animal_registry.get('cat', 'param1', 'param2')
         actual = cat.speak()
         expected = 'Meow param1 param2'
-        self.assertEqual(actual, expected)
+        self.assertEqual(expected, actual)
 
     def test_create_unregistered_animal(self):
         with self.assertRaises(RegistryKeyError):
