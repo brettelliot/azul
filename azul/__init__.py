@@ -2,16 +2,15 @@ import logbook
 from class_registry import ClassRegistry
 from class_registry import RegistryKeyError
 from .symbol_fetcher import SymbolFetcher
-
-
+from .scripts.azul import azul_cli
 
 __all__ = [
     'write_symbols',
-    'SymbolFetcher'
+    'SymbolFetcher',
+    'azul_cli'
 ]
 
 symbol_fetcher_registry = ClassRegistry()
-
 from .faang_symbol_fetcher import FaangSymbolFetcher
 
 
@@ -52,4 +51,9 @@ def write_symbols(source, output_path):
 
     # Write the symbols out
     sym_fetcher.write_symbols_to_file(symbols, output_path)
+
+
+def download_symbols(symbol_source, data_source, output_dir, start):
+    print(symbol_source, data_source, output_dir, start)
+    pass
 

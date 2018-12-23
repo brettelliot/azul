@@ -12,9 +12,29 @@ Azul will be successful when a quant can run a zipline backtest using a bundle b
 
 Use Cases and Prototypes
 ------------------------
+There are plenty of ways to use ``azul``. Here are a few.
+
+S&P 500
+~~~~~~~
+A algo trader wants minute and daily data for the S&P500 stocks for the last 5 years so she can backtest in zipline.
+
+This gets the S&P500 symbols from wikipedia, pulls minute level data from polygon for the last 5 years, generates daily bars for each day and stores the results in ``~/.azul/polygon/minute`` and ``~/.azul/polygon/daily``::
+
+    $ azul download --symbol-source sp500_wikipedia --data_source polygon --start 2014-01-01
+
+Then to ingest this data into zipline use the ``zipline ingest`` command::
+
+    $ CSVDIR=~/.azul/polygon/ zipline ingest -b my-azul-polygon-bundle`
+
+A few days, weeks, or months go by and she wants to update her data. This will look at the symbols in ``~/.azul/polygon``, find the last bar, and the download everything between the last bar and now::
+
+    $ azul update --data-source polygon
+
+Other use cases
+~~~~~~~~~~~~~~~
 Get the current list of symbols in the S&P500 and save them in a file called sp500.txt::
 
-    $ azul get_symbols --source sp500
+    $ azul symbols --source sp500
 
 Get minute and daily data for the S&P500 for the last 30 days from IEX::
 

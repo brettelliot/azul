@@ -13,6 +13,14 @@ Installation
 
 Command line usage
 ------------------
+To get a list of the FAANG symbols (used for testing) in the default directory (``~/.azul/symbols``)::
+
+    $ azul symbols
+
+To get a list of symbols for the S&P500 and store them someplace specific::
+
+    $ azul symbols --source sp500 --output ./my_data_dir
+
 To get the last 30 days of minute data for SPY from IEX::
 
     $ azul download --symbol-list SPY
