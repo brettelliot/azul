@@ -4,7 +4,8 @@ import azul
 import os
 import pathlib
 import pandas as pd
-import pytz
+import shutil
+import datetime
 
 
 @azul.price_manager_registry.register('mock_price_manager')
@@ -42,6 +43,20 @@ class MockPriceManager(azul.BasePriceManager):
 
 class TestWriteSymbols(unittest.TestCase):
 
+    def setUp(self):
+        # Set start date a few days before today
+        self.start_date_str = (datetime.datetime.now() - datetime.timedelta(days=4)).strftime('%Y-%m-%d')
+
+    def delete_home_dir_test_data_source(self):
+        # The tests create a test dir which should be removed before and after the tests run.
+        self.home_dir_test_data_source = pathlib.Path.home() / '.azul/mock_price_manager'
+
+        try:
+            shutil.rmtree(str(self.home_dir_test_data_source))
+        except FileNotFoundError:
+            pass
+        self.assertFalse(pathlib.Path(self.home_dir_test_data_source).exists())
+
     @unittest.skip
     def test_download_sp500(self):
 
@@ -50,7 +65,7 @@ class TestWriteSymbols(unittest.TestCase):
             result = runner.invoke(azul.cli, [
                 '--symbol-source', 'sp500_wikipedia',
                 '--data-source', 'polygon',
-                '--start', '2014-01-01',
+                '--start', self.start_date_str,
                 'download'
             ])
             self.assertEqual(0, result.exit_code)
@@ -65,7 +80,7 @@ class TestWriteSymbols(unittest.TestCase):
                 'download',
                 '--symbol-source', 'faang',
                 '--data-source', 'mock_price_manager',
-                '--start', '2018-12-20',
+                '--start', self.start_date_str,
                 '--output-dir', 'test_data_dir'
             ])
 
@@ -74,4 +89,32 @@ class TestWriteSymbols(unittest.TestCase):
             self.assertTrue(pathlib.Path(expected).exists())
             expected = 'test_data_dir/daily'
             self.assertTrue(pathlib.Path(expected).exists())
+
+    def test_writes_data_to_home_directory_when_no_output_dir_is_specified(self):
+        #  Scenario 1: No output_dir was specified:
+        #  Create a default data dir in ~/.azul
+
+        # Given a home dir without a test data source dir
+        self.delete_home_dir_test_data_source()
+
+        # When get_price_date is called with no output_dir specified
+        runner = CliRunner()
+        result = runner.invoke(azul.cli, [
+            'download',
+            '--symbol-source', 'faang',
+            '--data-source', 'mock_price_manager',
+            '--start', self.start_date_str
+        ])
+
+        # Then there will be data files in the home dir under the data source.
+        self.assertEqual(0, result.exit_code)
+        expected = self.home_dir_test_data_source
+        self.assertTrue(pathlib.Path(expected).exists())
+        expected = pathlib.Path(self.home_dir_test_data_source, 'minute')
+        self.assertTrue(pathlib.Path(expected).exists())
+        expected = pathlib.Path(self.home_dir_test_data_source, 'daily')
+        self.assertTrue(pathlib.Path(expected).exists())
+
+        # Delete the test data dir.
+        self.delete_home_dir_test_data_source()
 

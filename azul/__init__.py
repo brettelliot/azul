@@ -4,6 +4,7 @@ from class_registry import RegistryKeyError
 from .symbol_fetcher import SymbolFetcher
 from .scripts.azul import cli
 from .base_price_manager import BasePriceManager
+import pathlib
 
 __all__ = [
     'write_symbols',
@@ -104,6 +105,13 @@ def get_price_data(symbol_source, data_source, output_dir, start, end):
         log.error('No price manager registered with key: %s', data_source)
         raise
 
+    if output_dir is None:
+        # Create a default directory for storing data
+        default_output_dir_name = '.azul/' + data_source
+        default_output_dir_path = pathlib.Path.home() / default_output_dir_name
+        # Create the directory if it doesn't exist
+        pathlib.Path(default_output_dir_path).mkdir(parents=True, exist_ok=True)
+        output_dir = str(default_output_dir_path)
 
     price_manager.get_price_data(symbols, output_dir, start, end)
 
