@@ -9,6 +9,7 @@ import logbook
 
 log = logbook.Logger('MinuteDownloader')
 
+
 @azul.price_manager_registry.register('iex')
 class IEXPriceManager(azul.BasePriceManager):
 
@@ -61,11 +62,12 @@ class IEXPriceManager(azul.BasePriceManager):
         return start_date, end_date
 
     def _minute_dataframe_for_date(self, ticker: str, start_timestamp: pd.Timestamp) -> pd.DataFrame:
+        ret_df = pd.DataFrame()
 
         df = pyEX.chartDF(ticker, timeframe='1d', date=start_timestamp)
 
         if df.empty:
-            return df
+            return ret_df
 
         df = df.reset_index()
         df['volume'] = df['volume'].astype('int')
@@ -88,12 +90,13 @@ class IEXPriceManager(azul.BasePriceManager):
         df = df.tz_localize(nytz, axis=0, level=None, copy=False, ambiguous='raise')
         df.index = df.index.tz_convert(utc)
         if not (pd.Series(['close', 'high', 'low', 'open']).isin(df.columns).all()):
-            print("Skipping {0}, not all columns ({1}) received".format(ticker, str(df.columns)))
-            #skipped_list.append(symbol)
-            #continue
+            log.info("Skipping {0} for {1}, not all columns ({2}) received".format(
+                ticker, start_timestamp.date(), str(df.columns)))
+            return ret_df
+
         df = self._fixna(df, ticker)
         df.index = df.index.tz_convert(None)
 
         # Re-arrange them
-        df = df[self._cols]
-        return df
+        ret_df = df[self._cols]
+        return ret_df
