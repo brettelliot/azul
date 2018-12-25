@@ -91,7 +91,6 @@ def get_price_data(symbol_source: str, data_source: str, output_dir: str, start:
         None
 
     """
-    print('get_price_data')
     # Set the logger
     log = logbook.Logger('get_price_data')
 

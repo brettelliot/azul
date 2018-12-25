@@ -129,13 +129,14 @@ class BasePriceManager(object):
             return combined_df
 
         for timestamp in session_dates:
-            date_str = timestamp.strftime(azul.FORMAT_YMD)
+            #date_str = timestamp.strftime(azul.FORMAT_YMD)
             df = self._minute_dataframe_for_date(ticker, timestamp)
             if df.empty:
-                # probably change this to info
-                log.info('No minute data for {} on {}'.format(ticker, date_str))
+                #log.info('No minute data for {} on {}'.format(ticker, date_str))
+                log.info('No minute data for {} on {}'.format(ticker, timestamp.date()))
             else:
-                log.info('Retrieved minute data for {} on {}'.format(ticker, date_str))
+                #log.info('Retrieved minute data for {} on {}'.format(ticker, date_str))
+                log.info('Retrieved minute data for {} on {}'.format(ticker, timestamp.date()))
             combined_df = pd.concat([combined_df, df])
 
         return combined_df
