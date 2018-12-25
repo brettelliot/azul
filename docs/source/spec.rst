@@ -14,13 +14,25 @@ Use Cases and Prototypes
 ------------------------
 There are plenty of ways to use ``azul``. Here are a few.
 
-S&P 500
-~~~~~~~
+Minute and daily data for FAANG stocks from IEX
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Say the algo trader wants minute and daily data for the FAANG stocks (Facebook, Amazon, Apple, Netflix, and Google)  so she can backtest in zipline.
+
+This gets the FAANG symbols from the FaangSymbolFetcher (a trivial example), pulls minute level data from IEX (the default data source), covering the trailing 30 calendar days (the default), generates daily bars for each day and stores the results in the default output dir (``~/.azul/<data-source>``)::
+
+    $ azul download --symbol-source faang --data-source iex --output-dir ~/.azul/iex
+
+Because of the default values. the above command can be shortened to::
+
+    $ azul download
+
+S&P 500 from polygon
+~~~~~~~~~~~~~~~~~~~~
 A algo trader wants minute and daily data for the S&P500 stocks for the last 5 years so she can backtest in zipline.
 
 This gets the S&P500 symbols from wikipedia, pulls minute level data from polygon for the last 5 years, generates daily bars for each day and stores the results in ``~/.azul/polygon/minute`` and ``~/.azul/polygon/daily``::
 
-    $ azul download --symbol-source sp500_wikipedia --data_source polygon --start 2014-01-01
+    $ azul download --symbol-source sp500_wikipedia --data-source polygon --start 2018-01-01
 
 Then to ingest this data into zipline use the ``zipline ingest`` command::
 

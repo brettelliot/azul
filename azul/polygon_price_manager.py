@@ -177,7 +177,7 @@ class PolygonPriceManager(object):
 
         return list_date
 
-    def _minute_dataframe_for_date(self, ticker, start_timestamp):
+    def _minute_dataframe_for_date(self, ticker: str, start_timestamp: pd.Timestamp) -> pd.DataFrame:
 
         # https://api.polygon.io/v1/historic/agg/minute/{symbol}?from=2000-01-03&to=2000-01-04&apikey=xxx
 

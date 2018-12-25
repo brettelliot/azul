@@ -5,13 +5,15 @@ from .symbol_fetcher import SymbolFetcher
 from .scripts.azul import cli
 from .base_price_manager import BasePriceManager
 import pathlib
+from datetime import datetime
 
 __all__ = [
     'write_symbols',
     'get_price_data',
     'SymbolFetcher',
     'cli',
-    'BasePriceManager'
+    'BasePriceManager',
+    'FORMAT_YMD'
 ]
 
 symbol_fetcher_registry = ClassRegistry()
@@ -19,6 +21,10 @@ from .faang_symbol_fetcher import FaangSymbolFetcher
 
 price_manager_registry = ClassRegistry()
 from .polygon_price_manager import PolygonPriceManager
+from .iex_price_manager import IEXPriceManager
+
+
+FORMAT_YMD = "%Y-%m-%d"
 
 def write_symbols(source, output_path):
     """
@@ -59,7 +65,7 @@ def write_symbols(source, output_path):
     sym_fetcher.write_symbols_to_file(symbols, output_path)
 
 
-def get_price_data(symbol_source, data_source, output_dir, start, end):
+def get_price_data(symbol_source: str, data_source: str, output_dir: str, start: datetime, end: datetime) -> None:
     """
     Gets symbols, downloads minute data, generates daily data, and stores it in output_dir.
 
@@ -76,10 +82,10 @@ def get_price_data(symbol_source, data_source, output_dir, start, end):
             ``iex`` will get price data from IEX.
         output_dir (str):
             The directory to store the data in.
-        start (str):
-            The date to start getting data from in the format: YYYY-MM-DD.
-        end (str):
-            The date to end getting data from in the format: YYYY-MM-DD.
+        start (datetime):
+            The date to start getting data from.
+        end (datetime):
+            The date to end getting data from.
 
     Returns:
         None

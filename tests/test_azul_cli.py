@@ -14,9 +14,6 @@ class MockPriceManager(azul.BasePriceManager):
     def __init__(self):
         super().__init__()
 
-    def _list_date(self, ticker):
-        return None
-
     def _minute_dataframe_for_date(self, ticker, start_timestamp):
         end_timestamp = start_timestamp.replace(hour=23, minute=59)
 
@@ -41,7 +38,7 @@ class MockPriceManager(azul.BasePriceManager):
         return df
 
 
-class TestWriteSymbols(unittest.TestCase):
+class TestDownloadCommand(unittest.TestCase):
 
     def setUp(self):
         # Set start date a few days before today
@@ -80,6 +77,27 @@ class TestWriteSymbols(unittest.TestCase):
                 'download',
                 '--symbol-source', 'faang',
                 '--data-source', 'mock_price_manager',
+                '--start', self.start_date_str,
+                '--output-dir', 'test_data_dir'
+            ])
+
+            self.assertEqual(0, result.exit_code)
+            expected = 'test_data_dir/minute'
+            self.assertTrue(pathlib.Path(expected).exists())
+            expected = 'test_data_dir/daily'
+            self.assertTrue(pathlib.Path(expected).exists())
+
+
+    def test_download_faang_iex(self):
+
+        runner = CliRunner()
+        with runner.isolated_filesystem():
+            os.mkdir('test_data_dir')
+
+            result = runner.invoke(azul.cli, [
+                'download',
+                '--symbol-source', 'faang',
+                '--data-source', 'iex',
                 '--start', self.start_date_str,
                 '--output-dir', 'test_data_dir'
             ])
