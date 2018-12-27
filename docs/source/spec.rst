@@ -22,9 +22,19 @@ This gets the FAANG symbols from the FaangSymbolFetcher (a trivial example), pul
 
     $ azul download --symbol-source faang --data-source iex --output-dir ~/.azul/iex
 
-Because of the default values. the above command can be shortened to::
+Because of the default value the above command can be shortened to::
 
     $ azul download
+
+Updating previously downloaded data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Now a few days go by and the algo trader wants to get the newest price data for the stocks she downloaded earlier in the week. To do that, she uses the ``update`` command::
+
+    $ azul update --data-source iex --output-dir ~/.azul/iex
+
+Because of the default values the above command can be shortened to::
+
+    $ azul update
 
 S&P 500 from polygon
 ~~~~~~~~~~~~~~~~~~~~

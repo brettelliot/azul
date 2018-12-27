@@ -13,7 +13,9 @@ __all__ = [
     'SymbolFetcher',
     'cli',
     'BasePriceManager',
-    'FORMAT_YMD'
+    'FORMAT_YMD',
+    'price_manager_registry',
+    'update_price_data'
 ]
 
 symbol_fetcher_registry = ClassRegistry()
@@ -119,6 +121,11 @@ def get_price_data(symbol_source: str, data_source: str, output_dir: str, start:
         output_dir = str(default_output_dir_path)
 
     price_manager.get_price_data(symbols, output_dir, start, end)
+
+
+def update_price_data(data_source: str, output_dir_path: pathlib.Path) -> None:
+    pass
+
 
 
 
