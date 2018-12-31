@@ -26,7 +26,7 @@ from .polygon_price_manager import PolygonPriceManager
 from .iex_price_manager import IEXPriceManager
 
 
-FORMAT_YMD = "%Y-%m-%d"
+FORMAT_YMD = '%Y-%m-%d'
 
 def write_symbols(source, output_path):
     """

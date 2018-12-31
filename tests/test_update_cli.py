@@ -49,11 +49,10 @@ class TestUpdateCommand(unittest.TestCase):
             self.assertTrue(pathlib.Path(minute_path).exists())
             self.assertTrue(pathlib.Path(daily_path).exists())
 
-            # Sanity check that we don't have any data from the last 7 days in the daily files.
+            # Check that we have the new data from the last 7 days in the daily files.
             self.assertTrue(pathlib.Path(aapl_daily_path).exists())
             df = pd.read_csv(aapl_daily_path, parse_dates=True, index_col='date')
-            dr = df.index
-            out_side_dates = pd.date_range(end_date, datetime.now())
-            self.assertTrue(out_side_dates in dr)
-
+            actual_dates = df.index
+            expected_dates = pd.date_range(end_date, datetime.now()).normalize()
+            self.assertFalse(set(expected_dates).isdisjoint(actual_dates))
 
