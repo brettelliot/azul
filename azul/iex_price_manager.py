@@ -7,7 +7,7 @@ from typing import Tuple
 import logbook
 
 
-log = logbook.Logger('MinuteDownloader')
+log = logbook.Logger('IEXPriceManager')
 
 
 @azul.price_manager_registry.register('iex')

@@ -16,6 +16,9 @@ class BasePriceManager(object):
         self._calendar = zl.get_calendar(name=calendar_name)
         self._cols = ['open', 'high', 'low', 'close', 'volume', 'dividend', 'split']
 
+        # The number of days the price manager will keep trying to pull data for a symbol that is not returning data.
+        self.MISSING_DATE_THRESHOLD = 5
+
     def get_price_data(self, symbols: List[str], output_dir: str, start_date: datetime, end_date: datetime) -> None:
         minute_dir_path = pathlib.Path(output_dir, 'minute')
         daily_dir_path = pathlib.Path(output_dir, 'daily')
@@ -105,21 +108,34 @@ class BasePriceManager(object):
             start_date: datetime,
             end_date: datetime
     ) -> pd.DataFrame:
+        """
+        Returns a DataFrame containing the all the minute bars for stock between the start and end dates.
+
+        Args:
+            ticker (str): Ticker symbol for the stock.
+            start_date (datetime): Date to start pulling data.
+            end_date (datetime): Date to stop pulling data.
+
+        Returns:
+            combined_df (DataFrame): Contains the all the minute bars for a stock between the start and end dates.
+
+        """
 
         start_date, end_date = self._validated_start_and_end_dates(start_date, end_date)
 
         combined_df = pd.DataFrame(columns=self._cols)
         combined_df.index.name = 'date'
 
-        # Get the date the symbol was listed on the exchange.
-        list_date = self._list_date(ticker)
-
-        if list_date is not None:
-            # If the we are asking for data from before the stock was listed, then set the start date to the day
-            # the stock was listed.
-            if list_date > start_date:
-                log.info('The symbol {} was not listed until: {}. Adjusting start time.', ticker, list_date)
-                start_date = list_date
+        #
+        # # Get the date the symbol was listed on the exchange.
+        # list_date = self._list_date(ticker)
+        #
+        # if list_date is not None:
+        #     # If the we are asking for data from before the stock was listed, then set the start date to the day
+        #     # the stock was listed.
+        #     if list_date > start_date:
+        #         log.info('The symbol {} was not listed until: {}. Adjusting start time.', ticker, list_date)
+        #         start_date = list_date
 
         # Build a list of the trading days from the dates passed in.
         session_dates = self._calendar.sessions_in_range(start_date, end_date)
@@ -128,21 +144,32 @@ class BasePriceManager(object):
             log.info('The symbol {} did not trade between {} and {} ', ticker, start_date, end_date)
             return combined_df
 
-        for timestamp in session_dates:
-            #date_str = timestamp.strftime(azul.FORMAT_YMD)
+        # Iterate over the trading dates backwards. This means we don't need to know exactly
+        # when the stock started trading. Note: this won't pull data for stocks that have been delisted.
+        # TODO: Add code to capture data for delisted stocks.
+        num_missing_dates = 0
+        for timestamp in reversed(session_dates):
             df = self._minute_dataframe_for_date(ticker, timestamp)
             if df.empty:
-                #log.info('No minute data for {} on {}'.format(ticker, date_str))
+                # Start counting the number of consecutive trading dates we are missing data.
+                num_missing_dates += 1
                 log.info('No minute data for {} on {}'.format(ticker, timestamp.date()))
             else:
-                #log.info('Retrieved minute data for {} on {}'.format(ticker, date_str))
+                # reset missing date counter
+                num_missing_dates = 0
                 log.info('Retrieved minute data for {} on {}'.format(ticker, timestamp.date()))
-            combined_df = pd.concat([combined_df, df])
+                combined_df = pd.concat([combined_df, df])
 
+            if num_missing_dates >= self.MISSING_DATE_THRESHOLD:
+                log.info('No minute data for {} for {} days. Quitting.'.format(ticker, self.MISSING_DATE_THRESHOLD))
+                break
+
+        # Sort the dataframe oldest first, newest last.
+        combined_df.sort_index(inplace=True)
         return combined_df
 
-    def _list_date(self, ticker: str) -> datetime:
-        return None
+    # def _list_date(self, ticker: str) -> datetime:
+    #     return None
 
     def _minute_dataframe_for_date(self, ticker: str, start_timestamp: pd.Timestamp) -> pd.DataFrame:
         raise NotImplementedError
