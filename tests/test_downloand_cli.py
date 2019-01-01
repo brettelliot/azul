@@ -7,13 +7,15 @@ import pandas as pd
 import shutil
 import datetime
 from tests.mock_price_manager import MockPriceManager
+import tempfile
+from datetime import datetime, timedelta
 
 
 class TestDownloadCommand(unittest.TestCase):
 
     def setUp(self):
         # Set start date a few days before today
-        self.start_date_str = (datetime.datetime.now() - datetime.timedelta(days=4)).strftime('%Y-%m-%d')
+        self.start_date_str = (datetime.now() - timedelta(days=4)).strftime('%Y-%m-%d')
 
     def delete_home_dir_test_data_source(self):
         # The tests create a test dir which should be removed before and after the tests run.
@@ -40,43 +42,47 @@ class TestDownloadCommand(unittest.TestCase):
 
     def test_download_faang(self):
 
-        runner = CliRunner()
-        with runner.isolated_filesystem():
-            os.mkdir('test_data_dir')
+        # Given a directory for the data to be downloaded.
+        with tempfile.TemporaryDirectory() as output_dir_name:
+            output_dir_path = pathlib.Path(output_dir_name)
 
+            # When the azul download command is run
+            runner = CliRunner()
             result = runner.invoke(azul.cli, [
                 'download',
                 '--symbol-source', 'faang',
                 '--data-source', 'mock_price_manager',
                 '--start', self.start_date_str,
-                '--output-dir', 'test_data_dir'
+                '--output-dir', output_dir_name
             ])
 
             self.assertEqual(0, result.exit_code)
-            expected = 'test_data_dir/minute'
+            expected = pathlib.Path(output_dir_path, 'minute')
             self.assertTrue(pathlib.Path(expected).exists())
-            expected = 'test_data_dir/daily'
+            expected = pathlib.Path(output_dir_path, 'daily')
             self.assertTrue(pathlib.Path(expected).exists())
 
 
     def test_download_faang_iex(self):
 
-        runner = CliRunner()
-        with runner.isolated_filesystem():
-            os.mkdir('test_data_dir')
+        # Given a directory for the data to be downloaded.
+        with tempfile.TemporaryDirectory() as output_dir_name:
+            output_dir_path = pathlib.Path(output_dir_name)
 
+            # When the azul download command is run
+            runner = CliRunner()
             result = runner.invoke(azul.cli, [
                 'download',
                 '--symbol-source', 'faang',
                 '--data-source', 'iex',
                 '--start', self.start_date_str,
-                '--output-dir', 'test_data_dir'
+                '--output-dir', output_dir_name
             ])
 
             self.assertEqual(0, result.exit_code)
-            expected = 'test_data_dir/minute'
+            expected = pathlib.Path(output_dir_path, 'minute')
             self.assertTrue(pathlib.Path(expected).exists())
-            expected = 'test_data_dir/daily'
+            expected = pathlib.Path(output_dir_path, 'daily')
             self.assertTrue(pathlib.Path(expected).exists())
 
     def test_writes_data_to_home_directory_when_no_output_dir_is_specified(self):
@@ -106,4 +112,46 @@ class TestDownloadCommand(unittest.TestCase):
 
         # Delete the test data dir.
         self.delete_home_dir_test_data_source()
+
+    def test_stops_trying_to_download_data_when_no_data_is_returned(self):
+
+        # Given a place to put data
+        with tempfile.TemporaryDirectory() as output_dir_name:
+            output_dir_path = pathlib.Path(output_dir_name)
+
+            # Sanity check we don't have daily and minute data.
+            minute_path = pathlib.Path(output_dir_name, 'minute')
+            self.assertFalse(pathlib.Path(minute_path).exists())
+            daily_path = pathlib.Path(output_dir_name, 'daily')
+            self.assertFalse(pathlib.Path(daily_path).exists())
+
+            # When price data is retrieved for the last two months (from a source that only has data for the
+            # last 35 days
+            symbol_source = 'faang'
+            data_source = 'mock_price_manager'
+            start_date = datetime.now() - timedelta(days=60)
+            end_date = datetime.now() - timedelta(days=0)
+            azul.get_price_data(symbol_source, data_source, output_dir_path, start_date, end_date)
+
+            # Then we have minute and daily data
+            minute_path = pathlib.Path(output_dir_name, 'minute')
+            self.assertTrue(pathlib.Path(minute_path).exists())
+            daily_path = pathlib.Path(output_dir_name, 'daily')
+            self.assertTrue(pathlib.Path(daily_path).exists())
+
+            # And there is data from 35 days ago and more recently.
+            aapl_daily_path = pathlib.Path(daily_path, 'aapl.csv')
+            self.assertTrue(pathlib.Path(aapl_daily_path).exists())
+            df = pd.read_csv(aapl_daily_path, parse_dates=True, index_col='date')
+            actual_dates = df.index
+            data_start_date = datetime.now() - timedelta(days=35)
+            expected_dates = pd.date_range(data_start_date, end_date).normalize()
+            self.assertFalse(set(expected_dates).isdisjoint(actual_dates))
+
+            # And don't have any data from over 35 days ago in the daily files.
+            expected_dates = pd.date_range(start=start_date, end=data_start_date).normalize()
+            self.assertTrue(set(expected_dates).isdisjoint(actual_dates))
+
+
+
 

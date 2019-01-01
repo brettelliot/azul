@@ -1,5 +1,7 @@
 from azul import price_manager_registry, BasePriceManager
 import pandas as pd
+from datetime import datetime, timedelta
+import pytz
 
 
 @price_manager_registry.register('mock_price_manager')
@@ -8,8 +10,14 @@ class MockPriceManager(BasePriceManager):
     def __init__(self):
         super().__init__()
 
+        # Set the date data starts. Before this the price manager won't return data.
+        self.data_start_date = datetime.now(pytz.utc) - timedelta(days=35)
+
     def _minute_dataframe_for_date(self, ticker, start_timestamp):
         end_timestamp = start_timestamp.replace(hour=23, minute=59)
+
+        if start_timestamp < self.data_start_date:
+            return pd.DataFrame()
 
         session_minutes = pd.date_range(
             start_timestamp, end_timestamp, freq='min'
