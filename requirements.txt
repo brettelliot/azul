@@ -1,8 +1,9 @@
 alembic==1.0.5
 appnope==0.1.0
--e git+https://github.com/brettelliot/azul.git@ae85518695a58dcf61a621bc36baf7ecbdc9e17c#egg=azul
+-e git+https://github.com/brettelliot/azul.git@f257d5feb9b030bd6b525f2e5b061950edb3a1e5#egg=azul
 backcall==0.1.0
 bcolz==0.12.1
+beautifulsoup4==4.7.0
 Bottleneck==1.2.1
 certifi==2018.11.29
 chardet==3.0.4
@@ -13,6 +14,7 @@ cyordereddict==1.0.0
 Cython==0.29.2
 decorator==4.3.0
 empyrical==0.5.0
+html5lib==1.0.1
 idna==2.8
 intervaltree==3.0.2
 ipython==7.2.0
@@ -47,6 +49,7 @@ scipy==1.2.0
 six==1.12.0
 socketIO-client-nexus==0.7.6
 sortedcontainers==2.1.0
+soupsieve==1.6.1
 SQLAlchemy==1.2.15
 statsmodels==0.9.0
 tables==3.4.4
@@ -55,6 +58,7 @@ trading-calendars==1.6.1
 traitlets==4.3.2
 urllib3==1.24.1
 wcwidth==0.1.7
+webencodings==0.5.1
 websocket-client==0.54.0
 wrapt==1.10.11
 zipline==1.3.0

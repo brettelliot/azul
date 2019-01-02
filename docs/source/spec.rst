@@ -54,37 +54,10 @@ A few days, weeks, or months go by and she wants to update her data. This will l
 
 Other use cases
 ~~~~~~~~~~~~~~~
-Get the current list of symbols in the S&P500 and save them in a file called sp500.txt::
+Get minute and daily data for some stocks on the london exchange using a different trading calendar::
 
-    $ azul symbols --source sp500
+    $ azul download --symbol-source london --trading-calendar XLON
 
-Get minute and daily data for the S&P500 for the last 30 days from IEX::
-
-    $ azul download --symbol-list sp500.txt
-
-Get minute and daily data for the S&P500 for the last 30 days from IEX and put it someplace special::
-
-    $ azul download --symbol-list sp500.txt --data-dir ./my_iex_data
-
-Get minute and daily data for the S&P500 for the last 30 days from polygon::
-
-    $ azul download --symbol-list sp500.txt --source polygon
-
-Get minute and daily data for the S&P500 from polygon starting at a specific date::
-
-    $ azul download --symbol-list sp500.txt --source polygon --start 2018-11-01
-
-Get minute and daily data for the S&P500 from polygon starting at a specific date range::
-
-    $ azul download --symbol-list sp500.txt --source polygon --start 2018-11-01 --end 2018-11-30
-
-Get minute and daily data for some stocks on the london exchange::
-
-    $ azul download --symbol-list london.txt --trading-calendar XLON
-
-Update previously downloaded data with anything new that is available::
-
-    $ azul update --source polygon
 
 Acceptance Criteria
 -------------------

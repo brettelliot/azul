@@ -27,31 +27,6 @@ def cli():
 
 @click.command()
 @click.option(
-    '--source',
-    type=click.Choice({'sp500', 'polygon_cs', 'iex', 'faang'}),
-    default='faang',
-    show_default=True,
-    help='The list of symbols from a specific source.',
-)
-@click.option(
-    '-o',
-    '--output',
-    default=None,
-    metavar='FILENAME',
-    show_default=True,
-    help="The directory or file to write the symbol list. The default directory is ~/.azul/symbols."
-)
-def symbols(source, output):
-    """Get a list of symbols."""
-    try:
-        azul.write_symbols(source, output)
-    except Exception as e:
-        log.error(e)
-        raise
-
-
-@click.command()
-@click.option(
     '--symbol-source',
     type=click.STRING,
     metavar="['sp500', 'polygon_cs', 'iex', 'faang']",
@@ -102,7 +77,5 @@ def update():
     """Update symbols with any new data."""
     pass
 
-
-cli.add_command(symbols)
 cli.add_command(download)
 cli.add_command(update)

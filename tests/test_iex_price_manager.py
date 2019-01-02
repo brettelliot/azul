@@ -3,7 +3,6 @@ from click.testing import CliRunner
 import azul
 import os
 import pathlib
-import pandas as pd
 import shutil
 from datetime import datetime, timedelta
 

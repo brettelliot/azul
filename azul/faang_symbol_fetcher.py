@@ -1,12 +1,11 @@
-import azul
+from azul import symbol_fetcher_registry, BaseSymbolFetcher
 
 
-@azul.symbol_fetcher_registry.register('faang')
-class FaangSymbolFetcher(azul.SymbolFetcher):
+@symbol_fetcher_registry.register('faang')
+class FaangSymbolFetcher(BaseSymbolFetcher):
 
-    def __init__(self, symbols_path=None):
-        super().__init__(symbols_path)
-        pass
+    def __init__(self):
+        super().__init__()
 
     def symbols(self):
         return ['FB', 'AMZN', 'AAPL', 'NFLX', 'GOOG']
