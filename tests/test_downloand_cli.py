@@ -62,7 +62,6 @@ class TestDownloadCommand(unittest.TestCase):
             expected = pathlib.Path(output_dir_path, 'daily')
             self.assertTrue(pathlib.Path(expected).exists())
 
-
     def test_download_faang_iex(self):
 
         # Given a directory for the data to be downloaded.

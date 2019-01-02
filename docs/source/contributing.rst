@@ -3,7 +3,11 @@ Contributing
 ============
 This repo uses the `Git Branching Model <https://nvie.com/posts/a-successful-git-branching-model/>`_. The head of master branch should always be production ready. The head of the develop branch should contain the latest delivered development changes for the next release. Features should be created in feature branches that branch from the develop branch.
 
-Create virtualenv (recommended, but not required). Then get the repo::
+Create virtualenv::
+
+    $ mkvirtualenv azul-dev
+
+Then get the repo::
 
     $ git clone https://github.com/brettelliot/azul.git
     $ pip install -r requirements.txt
@@ -103,3 +107,12 @@ To test the package from pypi.org, create a new virtual env, install the package
     'ecal'
     >>> quit()
     $ deactivate
+
+If you're going to use polygon, and you're using virtualenvwrapper then you might want to set the env var using scripts like this. In ``$VIRTUAL_ENV/bin/activate`` add::
+
+    export AZUL_POLYGON_API_KEY=XXX
+
+And in ``$VIRTUAL_ENV/bin/predeactivate`` add::
+
+    unset AZUL_POLYGON_API_KEY
+

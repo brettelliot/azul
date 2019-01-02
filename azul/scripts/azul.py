@@ -20,7 +20,7 @@ def cli():
     """azul is a command line tool for downloading historical price data that can be used in a zipline bundle."""
 
     # install a logbook handler before performing any other operations
-    logbook.StderrHandler().push_application()
+    logbook.StderrHandler(level='NOTICE').push_application()
     global log
     log = logbook.Logger('AzulCli')
 

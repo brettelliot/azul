@@ -1,4 +1,4 @@
-import azul
+from azul import price_manager_registry, BasePriceManager
 import pyEX
 import pandas as pd
 import pytz
@@ -10,8 +10,8 @@ import logbook
 log = logbook.Logger('IEXPriceManager')
 
 
-@azul.price_manager_registry.register('iex')
-class IEXPriceManager(azul.BasePriceManager):
+@price_manager_registry.register('iex')
+class IEXPriceManager(BasePriceManager):
 
     def __init__(self):
         super().__init__()

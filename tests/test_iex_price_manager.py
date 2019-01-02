@@ -24,7 +24,7 @@ class TestIEPriceManager(unittest.TestCase):
             pass
         self.assertFalse(pathlib.Path(self.home_dir_test_data_source).exists())
 
-    @unittest.skip
+    #@unittest.skip
     def test_download_faang_iex(self):
 
         # Given a place to store the data
@@ -50,7 +50,7 @@ class TestIEPriceManager(unittest.TestCase):
             expected = output_dir_str + '/daily'
             self.assertTrue(pathlib.Path(expected).exists())
 
-    @unittest.skip
+    #@unittest.skip
     def test_download_iex_handles_unavailable_dates_gracefully(self):
 
         # Given a place to store the data

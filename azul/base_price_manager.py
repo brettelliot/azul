@@ -50,6 +50,7 @@ class BasePriceManager(object):
         daily_dir_path.mkdir(parents=True, exist_ok=True)
         filename = pathlib.Path(daily_dir_path, ticker + '.csv')
         daily_df.to_csv(filename)
+        log.notice('Retrieved: {}'.format(ticker))
 
     def _resample_minute_data_to_daily_data(self, df):
         ohlc_dict = {
@@ -239,8 +240,8 @@ class BasePriceManager(object):
                 df.drop(extra_session)
 
         if frequency == 'minute':
-            log.notice('Downloaded and processed {} minute bars for {}', len(df), ticker)
+            log.info('Downloaded and processed {} minute bars for {}', len(df), ticker)
         else:
-            log.notice('Downsampled {} daily bars for {}', len(df), ticker)
+            log.info('Downsampled {} daily bars for {}', len(df), ticker)
 
         return df
