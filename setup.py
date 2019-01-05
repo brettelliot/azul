@@ -19,7 +19,8 @@ setuptools.setup(
     include_package_data=True,
     install_requires=[
         'Click==7.0',
-        'Logbook>=1.4.1'
+        'Logbook>=1.4.1',
+        'class-registry>=2.1.2'
     ],
     entry_points='''
         [console_scripts]
