@@ -1,6 +1,6 @@
-==========
-SPEC: Azul
-==========
+============
+Product Spec
+============
 
 Vision and Overview
 -------------------
@@ -62,6 +62,7 @@ Get minute and daily data for some stocks on the london exchange using a differe
 Acceptance Criteria
 -------------------
 Using the command line interface a quant can:
+
 * Obtain the current list of symbols in the S&P500.
 * Configure azul to pull historical stock price data from IEX.
 * Configure azul to pull historical stock price data from Polygon.

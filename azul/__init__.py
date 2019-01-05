@@ -7,6 +7,11 @@ from .base_price_manager import BasePriceManager
 import pathlib
 from datetime import datetime
 
+"""
+Some global vars. 
+"""
+name = 'azul'
+
 __all__ = [
     'get_price_data',
     'BaseSymbolFetcher',

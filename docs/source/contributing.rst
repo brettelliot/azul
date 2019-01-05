@@ -82,13 +82,13 @@ Upload to test.pypi.org::
 
 To test the package from test.pypi.org, create a new virtual env, install the package, then run python and import it::
 
-    $ rm -rf ~/.virtualenvs/ecal_test_pypi
-    $ mkvirtualenv ecal_test_pypi
-    $ python3 -m pip install --no-cache-dir --extra-index-url https://test.pypi.org/simple/ ecal
+    $ rm -rf ~/.virtualenvs/azul_test_pypi
+    $ mkvirtualenv azul_test_pypi
+    $ python3 -m pip install --no-cache-dir --extra-index-url https://test.pypi.org/simple/ azul
     $ python
-    >>> import ecal
-    >>> ecal.name
-    'ecal'
+    >>> import azul
+    >>> azul.name
+    'azul'
     >>> quit()
     $ deactivate
 
@@ -98,13 +98,13 @@ Upload the package to the real pypi.org website::
 
 To test the package from pypi.org, create a new virtual env, install the package, then run python and import it::
 
-    $ rm -rf ~/.virtualenvs/ecal_pypi
-    $ mkvirtualenv ecal_pypi
-    $ pip install --no-cache-dir ecal
+    $ rm -rf ~/.virtualenvs/azul_pypi
+    $ mkvirtualenv azul_pypi
+    $ pip install --no-cache-dir azul
     $ python
-    >>> import ecal
-    >>> ecal.name
-    'ecal'
+    >>> import azul
+    >>> azul.name
+    'azul'
     >>> quit()
     $ deactivate
 
