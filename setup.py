@@ -1,12 +1,12 @@
 import setuptools
 import os
 
+
 with open('README.rst', 'r') as fh:
     long_description = fh.read()
 
 version_file = open(os.path.join('./', 'VERSION'))
 version = version_file.read().strip()
-
 
 
 setuptools.setup(
@@ -20,15 +20,15 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     install_requires=[
-        'Click==7.0',
+        'Click>=7.0',
         'Logbook>=1.4.1',
         'class-registry>=2.1.2',
-        'numpy==1.15.4',
-        'pandas==0.22.0',
+        'numpy>=1.15.4',
+        'pandas>=0.22.0',
         'zipline>=1.3.0',
         'bcolz<1,>=0.12.1',
-        'Bottleneck==1.2.1',
-        'scipy==1.2.0'
+        'bottleneck>=1.2.1',
+        'scipy>=1.2.0'
     ],
     entry_points='''
         [console_scripts]
