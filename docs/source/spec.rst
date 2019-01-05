@@ -1,6 +1,6 @@
-==========
-SPEC: Azul
-==========
+============
+Product Spec
+============
 
 Vision and Overview
 -------------------
@@ -12,41 +12,57 @@ Azul will be successful when a quant can run a zipline backtest using a bundle b
 
 Use Cases and Prototypes
 ------------------------
-Get the current list of symbols in the S&P500 and save them in a file called sp500.txt::
+There are plenty of ways to use ``azul``. Here are a few.
 
-    $ azul get_symbols --source sp500
+Minute and daily data for FAANG stocks from IEX
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Say the algo trader wants minute and daily data for the FAANG stocks (Facebook, Amazon, Apple, Netflix, and Google)  so she can backtest in zipline.
 
-Get minute and daily data for the S&P500 for the last 30 days from IEX::
+This gets the FAANG symbols from the FaangSymbolFetcher (a trivial example), pulls minute level data from IEX (the default data source), covering the trailing 30 calendar days (the default), generates daily bars for each day and stores the results in the default output dir (``~/.azul/<data-source>``)::
 
-    $ azul download --symbol-list sp500.txt
+    $ azul download --symbol-source faang --data-source iex --output-dir ~/.azul/iex
 
-Get minute and daily data for the S&P500 for the last 30 days from IEX and put it someplace special::
+Because of the default value the above command can be shortened to::
 
-    $ azul download --symbol-list sp500.txt --data-dir ./my_iex_data
+    $ azul download
 
-Get minute and daily data for the S&P500 for the last 30 days from polygon::
+Updating previously downloaded data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Now a few days go by and the algo trader wants to get the newest price data for the stocks she downloaded earlier in the week. To do that, she uses the ``update`` command::
 
-    $ azul download --symbol-list sp500.txt --source polygon
+    $ azul update --data-source iex --output-dir ~/.azul/iex
 
-Get minute and daily data for the S&P500 from polygon starting at a specific date::
+Because of the default values the above command can be shortened to::
 
-    $ azul download --symbol-list sp500.txt --source polygon --start 2018-11-01
+    $ azul update
 
-Get minute and daily data for the S&P500 from polygon starting at a specific date range::
+S&P 500 from polygon
+~~~~~~~~~~~~~~~~~~~~
+A algo trader wants minute and daily data for the S&P500 stocks for the last 5 years so she can backtest in zipline.
 
-    $ azul download --symbol-list sp500.txt --source polygon --start 2018-11-01 --end 2018-11-30
+This gets the S&P500 symbols from wikipedia, pulls minute level data from polygon for the last 5 years, generates daily bars for each day and stores the results in ``~/.azul/polygon/minute`` and ``~/.azul/polygon/daily``::
 
-Get minute and daily data for some stocks on the london exchange::
+    $ azul download --symbol-source sp500_wikipedia --data-source polygon --start 2018-01-01
 
-    $ azul download --symbol-list london.txt --trading-calendar XLON
+Then to ingest this data into zipline use the ``zipline ingest`` command::
 
-Update previously downloaded data with anything new that is available::
+    $ CSVDIR=~/.azul/polygon/ zipline ingest -b my-azul-polygon-bundle`
 
-    $ azul update --source polygon
+A few days, weeks, or months go by and she wants to update her data. This will look at the symbols in ``~/.azul/polygon``, find the last bar, and the download everything between the last bar and now::
+
+    $ azul update --data-source polygon
+
+Other use cases
+~~~~~~~~~~~~~~~
+Get minute and daily data for some stocks on the london exchange using a different trading calendar::
+
+    $ azul download --symbol-source london --trading-calendar XLON
+
 
 Acceptance Criteria
 -------------------
 Using the command line interface a quant can:
+
 * Obtain the current list of symbols in the S&P500.
 * Configure azul to pull historical stock price data from IEX.
 * Configure azul to pull historical stock price data from Polygon.
