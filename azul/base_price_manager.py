@@ -24,8 +24,14 @@ class BasePriceManager(object):
         daily_dir_path = pathlib.Path(output_dir, 'daily')
 
         for ticker in symbols:
-            self._download_and_process_data(
-                ticker, start_date, end_date, minute_dir_path, daily_dir_path)
+            try:
+                self._download_and_process_data(
+                    ticker, start_date, end_date, minute_dir_path, daily_dir_path)
+            except Exception as e:
+                log.error('Error downloading and processing data for: {} from: {} to: {}'.format(
+                    ticker, start_date, end_date))
+                log.error('Exception: {}', e)
+                continue
 
     def _download_and_process_data(
             self,
@@ -208,36 +214,36 @@ class BasePriceManager(object):
             df = df[df.index.isin(minutes_in_session)]
             if (minutes_passed) > len(minutes_in_session):
                 # print('Removed ' + str((minutes_passed) - len(minutes_in_session)) + ' minutes')
-                pass
+                log.info('Extra minute sessions for {}'.format(ticker))
             elif minutes_passed < len(minutes_in_session):
                 num_missing_sessions = len(minutes_in_session) - minutes_passed
-                log.info('Missing sessions for {}'.format(ticker))
+                log.info('Missing minute sessions for {}'.format(ticker))
         elif frequency == 'daily' and len(df) != len(asset_sessions):
             missing_sessions = asset_sessions.difference(
                 pd.to_datetime(np.array(df.index), unit='s', utc=True, )).tolist()
             extra_sessions = pd.to_datetime(np.array(df.index), unit='s', utc=True, ).difference(
                 asset_sessions).tolist()
             if len(missing_sessions) > 0:
+                log.info('Missing daily sessions for {}'.format(ticker))
                 # missing_sessions_list.append(symbol)
                 # print('Adding ' + str(len(missing_sessions)) + ' sessions for ' + str(ticker))
-                pass
             if len(extra_sessions) > 0:
+                log.info('Extra daily sessions for {}'.format(ticker))
                 # extra_sessions_list.append(symbol)
                 # print('Removing ' + str(len(extra_sessions)) + ' sessions for ' + str(symbol))
-                pass
-            for missing_session in missing_sessions:
-                prev_date = self._calendar.previous_session_label(missing_session)
-                row_to_copy = df[(df.index == prev_date)]
-                row_to_copy_val = row_to_copy.values
-                # from IPython import embed; embed()
-                df.loc[missing_session] = row_to_copy_val[0]
-                df.loc[missing_session].volume = 0
-                # row = row_to_copy
-                # table.append(row)
-
-            for extra_session in extra_sessions:
-                # delete stuff
-                df.drop(extra_session)
+            # for missing_session in missing_sessions:
+            #     prev_date = self._calendar.previous_session_label(missing_session)
+            #     row_to_copy = df[(df.index == prev_date)]
+            #     row_to_copy_val = row_to_copy.values
+            #     # from IPython import embed; embed()
+            #     df.loc[missing_session] = row_to_copy_val[0]
+            #     df.loc[missing_session].volume = 0
+            #     # row = row_to_copy
+            #     # table.append(row)
+            #
+            # for extra_session in extra_sessions:
+            #     # delete stuff
+            #     df.drop(extra_session)
 
         if frequency == 'minute':
             log.info('Downloaded and processed {} minute bars for {}', len(df), ticker)

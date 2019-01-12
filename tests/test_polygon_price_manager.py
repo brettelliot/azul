@@ -43,3 +43,18 @@ class TestPolygonPriceManager(unittest.TestCase):
             self.assertTrue(pathlib.Path(expected).exists())
             expected = pathlib.Path(output_dir_path, 'daily')
             self.assertTrue(pathlib.Path(expected).exists())
+
+    @unittest.skip
+    def test_polygon_throttling(self):
+        # Run this in the debugger and see what's going on. It gets a year of minute data from polygon.
+
+        # Given an existing data dir
+        with tempfile.TemporaryDirectory() as output_dir_name:
+            output_dir_path = pathlib.Path(output_dir_name)
+
+            # With data up to a week ago
+            symbol_source = 'sp500_wikipedia'
+            data_source = 'polygon'
+            start_date = datetime.strptime('2018-01-01', azul.FORMAT_YMD)
+            end_date = datetime.strptime('2019-01-01', azul.FORMAT_YMD)
+            azul.get_price_data(symbol_source, data_source, output_dir_path, start_date, end_date)

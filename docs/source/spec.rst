@@ -4,7 +4,7 @@ Product Spec
 
 Vision and Overview
 -------------------
-Azul exists to make it easy for hobbyist quants and algorithmic traders to get data into zipline for backtesting. Ideally, most users will interact with azul from the command line however, a python package is included for programattic use cases too.
+Azul exists to make it easy for hobbyist quants and algorithmic traders to get data into zipline for backtesting. Ideally, most users will interact with azul from the command line however, a python package is included for programmatic use cases too.
 
 Success Metrics
 ---------------
@@ -12,19 +12,17 @@ Azul will be successful when a quant can run a zipline backtest using a bundle b
 
 Use Cases and Prototypes
 ------------------------
-There are plenty of ways to use ``azul``. Here are a few.
+There are plenty of ways to use azul. Here are a few.
 
 Minute and daily data for FAANG stocks from IEX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Say the algo trader wants minute and daily data for the FAANG stocks (Facebook, Amazon, Apple, Netflix, and Google)  so she can backtest in zipline.
+*As an algo trader I need minute and daily data for the FAANG stocks (Facebook, Amazon, Apple, Netflix, and Google) so that I can backtest my intraday strategy in zipline.*
 
-This gets the FAANG symbols from the FaangSymbolFetcher (a trivial example), pulls minute level data from IEX (the default data source), covering the trailing 30 calendar days (the default), generates daily bars for each day and stores the results in the default output dir (``~/.azul/<data-source>``)::
+To do that they could use the command::
 
-    $ azul download --symbol-source faang --data-source iex --output-dir ~/.azul/iex
+    $ azul download --symbol-source faang --data-source iex
 
-Because of the default value the above command can be shortened to::
-
-    $ azul download
+This gets the FAANG symbols, pulls minute level data from IEX (for the last 30 calendar days which is the default), generates daily bars for each day and stores the results in the default output dir (``~/.azul/iex``).
 
 Updating previously downloaded data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,21 +56,24 @@ Get minute and daily data for some stocks on the london exchange using a differe
 
     $ azul download --symbol-source london --trading-calendar XLON
 
-
-Acceptance Criteria
--------------------
+1.0.0 Acceptance Criteria
+-------------------------
 Using the command line interface a quant can:
 
-* Obtain the current list of symbols in the S&P500.
-* Configure azul to pull historical stock price data from IEX.
-* Configure azul to pull historical stock price data from Polygon.
-* Configure the start and end dates for the data download.
-* Configure the data directory for downloading and updating data.
-* Configure azul with a trading calendar that knows all available bars to download data for.
-* Download historical minute level price data for a symbol for all bars in a trading calendar.
-* Update a previously existing data directory with any new data that is available.
+* [x] Obtain the current list of symbols in the S&P500.
+* [x] Configure azul to pull historical stock price data from IEX.
+* [x] Configure azul to pull historical stock price data from Polygon.
+* [x] Configure the start and end dates for the data download.
+* [x] Configure the data directory for downloading and updating data.
+* [ ] Update a previously existing data directory with any new data that is available.
+* [ ] Send output to the command line or a log file.
+* [ ] Write a special results file of stocks that were not downloaded or downloaded with missing sessions.
+* [ ] Specify the log level on the command line.
 
 Future work
 ~~~~~~~~~~~
-* Obtain the list of symbols in the S&P500 for a specific date.
-* Obtain the list of symbols in the S&P500 for a specific date range.
+* [ ] Obtain the list of symbols in the S&P500 for a specific date.
+* [ ] Obtain the list of symbols in the S&P500 for a specific date range.
+* [ ] Configure azul with a different trading calendar that knows all available bars to download data for.
+* [ ] Download historical minute level price data for a symbol for all bars in the different trading calendar.
+

@@ -120,7 +120,13 @@ class PolygonPriceManager(BasePriceManager):
         size = 'minute'
         url = self._url('/v1/historic/agg/{}/{}'.format(size, ticker))
 
-        response = requests.get(url, params=params)
+        try:
+            response = requests.get(url, params=params)
+        except requests.exceptions.RequestException as e:
+            log.error('Error getting historic agg {} data from polygon for: {} from: {} to: {}'.format(
+                size, ticker, start_timestamp, end_timestamp))
+            log.error('Exception: {}', e)
+            return df
 
         if response.status_code != 200:
             log.error('Error getting historic agg {} data from polygon for: {} from: {} to: {}'.format(
