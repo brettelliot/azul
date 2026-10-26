@@ -2,7 +2,7 @@ alabaster==0.7.12
 alembic==1.0.5
 appnope==0.1.0
 -e git+https://github.com/brettelliot/azul.git@74718c37370a197ccbf49815bab1c5258bd92c58#egg=azul
-Babel==2.6.0
+Babel==2.9.1
 backcall==0.1.0
 bcolz==0.12.1
 beautifulsoup4==4.7.0
