@@ -24,7 +24,7 @@ intervaltree==3.0.2
 ipython==8.10.0
 ipython-genutils==0.2.0
 jedi==0.13.2
-Jinja2==2.11.3
+Jinja2==3.1.6
 Logbook==1.4.1
 lru-dict==1.1.6
 lxml==6.1.0
