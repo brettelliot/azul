@@ -33,7 +33,7 @@ MarkupSafe==1.1.0
 multipledispatch==0.6.0
 networkx==1.11
 numexpr==2.6.9
-numpy==1.15.4
+numpy==1.22.0
 packaging==18.0
 pandas==0.22.0
 pandas-datareader==0.7.0
