@@ -10,7 +10,7 @@ MarkupSafe==1.0
 numpy==1.22.0
 packaging==17.1
 pandas==0.22.0
-Pygments==2.7.4
+Pygments==2.20.0
 pyparsing==2.2.1
 python-dateutil==2.7.3
 pytz==2018.5

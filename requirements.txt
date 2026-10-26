@@ -45,7 +45,7 @@ Pillow==13.0.0
 prompt-toolkit==2.0.7
 ptyprocess==0.6.0
 pyEX==0.1.6
-Pygments==2.7.4
+Pygments==2.20.0
 pyparsing==2.3.0
 python-dateutil==2.7.5
 python-editor==1.0.3
